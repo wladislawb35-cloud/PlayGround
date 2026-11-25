@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ironvale</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">✦</span><div><strong>IRONVALE</strong><small>Settlement</small></div></div>
+      <div class="resources">
+        <div class="resource"><span class="resource-icon wood">▰</span><strong id="wood">120</strong><small>WOOD</small></div>
+        <div class="resource"><span class="resource-icon stone">◆</span><strong id="stone">80</strong><small>STONE</small></div>
+        <div class="resource"><span class="resource-icon food">●</span><strong id="food">60</strong><small>FOOD</small></div>
+      </div>
+      <button id="pauseBtn" class="icon-btn" aria-label="Pause">Ⅱ</button>
+    </header>
+
+    <main>
+      <aside class="panel build-panel">
+        <div class="panel-title"><span>BUILD</span><span class="year">YEAR <b id="year">1</b></span></div>
+        <div id="buildings" class="building-list"></div>
+      </aside>
+
+      <section class="world-wrap">
+        <canvas id="world" aria-label="Settlement map"></canvas>
+        <div class="zoom"><button id="zoomOut">−</button><span id="zoomLabel">100%</span><button id="zoomIn">＋</button></div>
+      </section>
+
+      <aside class="panel info-panel">
+        <div class="panel-title"><span>VILLAGE</span><span class="status"><i></i> ACTIVE</span></div>
+        <div class="population"><span id="populationIcon">♟</span><div><strong id="population">8 / 12</strong><small>Population</small></div></div>
+        <div class="chart">
+          <div class="chart-label"><span>Production</span><b id="producing">+0/hr</b></div>
+          <canvas id="chart" width="220" height="74"></canvas>
+        </div>
+        <div class="settlement-list">
+          <div><span>Huts</span><b id="huts">1</b></div>
+          <div><span>Workshops</span><b id="workshops">0</b></div>
+          <div><span>Storehouses</span><b id="storehouses">0</b></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <span id="toast">Select a building, then choose a tile</span>
+      <div class="speed"><button class="speedBtn active" data-speed="1">I</button><button class="speedBtn" data-speed="2">II</button><button class="speedBtn" data-speed="4">III</button></div>
+    </footer>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
