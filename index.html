@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+    <meta name="theme-color" content="#182716" />
+    <meta
+      name="description"
+      content="Timberhold — a tiny retro settlement builder. Raise lumberjack huts, quarries and cottages, and grow a town in the pines."
+    />
+    <title>Timberhold — A Tiny Settlement</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23241609'/%3E%3Cpath d='M8 2 3 12h10z' fill='%232f7038'/%3E%3Cpath d='M8 5 5 11h6z' fill='%235aa956'/%3E%3Crect x='7' y='12' width='2' height='2' fill='%23684730'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas" aria-label="Timberhold settlement map"></canvas>
+      <div id="crt" aria-hidden="true"></div>
+
+      <div id="hud">
+        <header id="topbar">
+          <div class="brand">
+            <img class="brand-logo" data-icon="logo" alt="" />
+            <div class="brand-text">
+              <span class="brand-title">TIMBERHOLD</span>
+              <span class="brand-sub">A TINY SETTLEMENT</span>
+            </div>
+          </div>
+
+          <div class="resources" aria-label="Resources">
+            <div class="res-chip" id="chip-wood" title="Wood">
+              <img data-icon="wood" alt="Wood" />
+              <span class="res-val" id="res-wood">60</span>
+              <span class="res-cap" id="cap-wood">/200</span>
+            </div>
+            <div class="res-chip" id="chip-stone" title="Stone">
+              <img data-icon="stone" alt="Stone" />
+              <span class="res-val" id="res-stone">25</span>
+              <span class="res-cap" id="cap-stone">/200</span>
+            </div>
+            <div class="res-chip res-pop" id="chip-pop" title="Settlers">
+              <img data-icon="pop" alt="Settlers" />
+              <span class="res-val" id="res-pop">3</span>
+              <span class="res-cap" id="cap-pop">/3</span>
+            </div>
+            <div class="res-chip res-idle" id="chip-idle" title="Idle settlers ready for work">
+              <img data-icon="idle" alt="Idle settlers" />
+              <span class="res-val" id="res-idle">3</span>
+              <span class="res-label">IDLE</span>
+            </div>
+          </div>
+
+          <div class="top-actions">
+            <div class="speed-group" role="group" aria-label="Game speed">
+              <button class="speed-btn" data-speed="0" title="Pause (Space)" aria-label="Pause">II</button>
+              <button class="speed-btn active" data-speed="1" title="Normal speed (1)" aria-label="Normal speed">1x</button>
+              <button class="speed-btn" data-speed="2" title="Fast (2)" aria-label="Fast speed">2x</button>
+              <button class="speed-btn" data-speed="3" title="Fastest (3)" aria-label="Fastest speed">3x</button>
+            </div>
+            <button class="top-btn" id="btn-sound" title="Toggle sound" aria-label="Toggle sound">SND</button>
+            <button class="top-btn" id="btn-menu" title="Menu" aria-label="Open menu">MENU</button>
+          </div>
+        </header>
+
+        <aside id="objective-panel" class="panel">
+          <div class="panel-head">
+            <span class="panel-tag">OBJECTIVE</span>
+            <span id="obj-count" class="panel-count">1 / 7</span>
+            <button id="obj-toggle" class="tiny-btn" aria-label="Collapse objective details">−</button>
+          </div>
+          <div class="obj-main">
+            <h2 id="obj-title">Raise a Lumberjack Hut</h2>
+            <div class="obj-bar"><div id="obj-fill"></div></div>
+          </div>
+          <div id="obj-details" class="obj-details">
+            <p id="obj-desc">Place it beside the pines. The dashed ring shows where it can work.</p>
+            <div id="obj-reward" class="obj-reward"></div>
+          </div>
+        </aside>
+
+        <aside id="selection-panel" class="panel hidden" aria-live="polite">
+          <div class="sel-top">
+            <img id="sel-icon" alt="" />
+            <div class="sel-heading">
+              <h2 id="sel-name">Lumberjack Hut</h2>
+              <span id="sel-kind">PRODUCTION</span>
+            </div>
+            <button id="btn-sel-close" class="tiny-btn" aria-label="Close building panel">×</button>
+          </div>
+          <p id="sel-status" class="sel-status">Waiting for a worker.</p>
+          <div id="sel-stats" class="sel-stats"></div>
+          <button id="btn-demolish" class="danger-btn">Demolish</button>
+        </aside>
+
+        <div id="toasts" aria-live="polite"></div>
+
+        <footer id="bottom-ui">
+          <div id="hint-bar">
+            <span id="hint-text">Pick a building below, then choose a spot on the map.</span>
+          </div>
+          <div id="build-bar">
+            <div id="build-list" role="toolbar" aria-label="Buildings"></div>
+          </div>
+        </footer>
+      </div>
+
+      <div id="start-screen" class="overlay">
+        <div class="start-card">
+          <div class="start-kicker">EST. 1892 · PINE VALLEY</div>
+          <img class="start-logo" data-icon="logo" alt="" />
+          <h1 class="game-title">TIMBERHOLD</h1>
+          <p class="tagline">Raise a little settlement in the pines.</p>
+          <div class="start-actions">
+            <button id="btn-play" class="big-btn">Play</button>
+            <button id="btn-new" class="ghost-btn">New Settlement</button>
+          </div>
+          <button id="btn-how" class="link-btn">How to play</button>
+          <div class="start-controls">DRAG TO PAN · SCROLL OR PINCH TO ZOOM · 1–6 TO BUILD</div>
+        </div>
+        <div class="start-credit">A self-contained canvas game · no downloads</div>
+      </div>
+
+      <div id="win-screen" class="overlay hidden">
+        <div class="win-card panel">
+          <div class="win-ribbon">SETTLEMENT COMPLETE</div>
+          <h2 class="win-title">TIMBERHOLD STANDS</h2>
+          <p class="win-copy">From a single storehouse to a town with a hall of its own. The pines are proud of you.</p>
+          <div id="win-stats" class="win-stats"></div>
+          <div class="win-actions">
+            <button id="btn-keep" class="big-btn">Keep Building</button>
+            <button id="btn-again" class="ghost-btn">New Settlement</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal" class="overlay hidden">
+        <div class="modal-card panel">
+          <button id="modal-close" class="tiny-btn modal-close" aria-label="Close">×</button>
+          <h2 id="modal-title">Menu</h2>
+          <div id="modal-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>
